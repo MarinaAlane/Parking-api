@@ -1,9 +1,11 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const ParkingModel = require('./model/parkingModel')
+const express = require('express');
+const mongoose = require('mongoose');
+const parkingRoutes = require('./routes/routes');
 
-const app = express()
-app.use(express.json())
+const app = express();
+app.use(express.json());
+
+const PORT = 3001;
 
 async function connectionToDB() {
   try {
@@ -15,14 +17,9 @@ async function connectionToDB() {
 }
 
 connectionToDB();
-const teste = new ParkingModel({
-  plate: 'SGBL - 4889',
-  entrance: new Date(),
-  exit: new Date(),
-  paid: true,
-  Reservation_code: 'SADSSDSADSADAS',
+
+app.use('/parking', parkingRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Servidor iniciado na porta ${PORT}`);
 });
-teste.save();
-app.listen(3001, () => {
-  console.log('Server running at port 3001')
-})
