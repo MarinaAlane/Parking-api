@@ -1,4 +1,6 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
+
 const Parking = require('../model/parkingModel');
 const generateReservationCode = require('../controller/parkingController');
 
