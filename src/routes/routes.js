@@ -65,5 +65,35 @@ router.put('/:id/out', async (req, res) => {
   }
 });
 
+router.put('/:id/pay', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'ID inválido' });
+    }
+
+    const parking = await Parking.findById(id);
+
+    if (!parking) {
+      return res.status(404).json({ message: 'Registro não encontrado' });
+    }
+
+    if (parking.paid) {
+      return res.status(400).json({ message: 'Pagamento já efetuado' });
+    }
+
+    parking.paid = true;
+
+    await parking.save();
+
+    res.status(200).json({ message: 'Pagamento efetuado com sucesso' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao efetuar pagamento' });
+  }
+});
+
+
 
 module.exports = router;
