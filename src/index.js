@@ -19,6 +19,7 @@ async function connectionToDB() {
 connectionToDB();
 
 app.use('/parking', parkingRoutes);
+app.use('/parking/:id/out', parkingRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor iniciado na porta ${PORT}`);

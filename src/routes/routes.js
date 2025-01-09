@@ -29,4 +29,39 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+router.put('/:id/out', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'ID inválido' });
+    }
+
+    const parking = await Parking.findById(id);
+
+    if (!parking) {
+      return res.status(404).json({ message: 'Registro não encontrado' });
+    }
+
+    if (parking.exit) {
+      return res.status(400).json({ message: 'Saída já registrada' });
+    }
+
+    if (!parking.paid) {
+      return res.status(402).json({ message: 'Pagamento pendente' });
+    }
+
+    parking.exit = new Date();
+
+    await parking.save();
+
+    res.status(200).json({ message: 'Saída registrada com sucesso' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao registrar saída' });
+  }
+});
+
+
 module.exports = router;
