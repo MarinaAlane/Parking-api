@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const parking = new mongoose.Schema({
-  plate: String,
+  plate: { type: String, required: true },
   entrance: Date,
   exit: Date,
   paid: Boolean,

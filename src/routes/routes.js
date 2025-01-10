@@ -8,10 +8,13 @@ router.post('/', async (req, res) => {
   try {
     const { plate } = req.body;
 
+    if (!plate) {
+      return res.status(400).json({ message: 'Placa é obrigatória' });
+    }
+
     if (!/^[A-Z]{3}-\d{4}$/.test(plate)) {
       return res.status(400).json({ message: 'Formato de placa inválido' });
     }
-
     const reservationCode = generateReservationCode();
 
     const parking = new Parking({
