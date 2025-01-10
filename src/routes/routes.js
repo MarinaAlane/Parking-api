@@ -1,8 +1,9 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const Parking = require('../model/parkingModel');
-const generateReservationCode = require('../controller/parkingController');
+const { generateReservationCode, formattedHistory } = require('../controller/parkingController');
 
 router.post('/', async (req, res) => {
   try {
@@ -56,6 +57,7 @@ router.put('/:id/out', async (req, res) => {
     if (!parking.paid) {
       return res.status(402).json({ message: 'Pagamento pendente' });
     }
+    const timeResults = timeDiff === 0 ? 'menos de um minuto' : `${timeDiff} minutos`;
 
     parking.exit = new Date();
 
@@ -94,6 +96,33 @@ router.put('/:id/pay', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erro ao efetuar pagamento' });
+  }
+});
+
+router.get('/:plate', async (req, res) => {
+  try {
+    const { plate } = req.params;
+    console.log(plate)
+    if (!plate) {
+      return res.status(400).json({ message: 'Placa é obrigatória' });
+    }
+
+    if (!/^[A-Z]{3}-\d{4}$/.test(plate)) {
+      return res.status(400).json({ message: 'Formato de placa inválido' });
+    }
+
+    const parkings = await Parking.find({ plate });
+
+    if (!parkings || parkings.length === 0) {
+      return res.status(404).json({ message: 'Registro não encontrado' });
+    }
+
+
+    res.status(200).json(formattedHistory(parkings));
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao buscar registro' });
   }
 });
 

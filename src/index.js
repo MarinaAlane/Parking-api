@@ -21,6 +21,7 @@ connectionToDB();
 app.use('/parking', parkingRoutes);
 app.use('/parking/:id/out', parkingRoutes);
 app.use('/parking/:id/pay', parkingRoutes);
+app.use('/parking/:plate', parkingRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor iniciado na porta ${PORT}`);
