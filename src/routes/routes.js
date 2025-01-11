@@ -57,7 +57,6 @@ router.put('/:id/out', async (req, res) => {
     if (!parking.paid) {
       return res.status(402).json({ message: 'Pagamento pendente' });
     }
-    const timeResults = timeDiff === 0 ? 'menos de um minuto' : `${timeDiff} minutos`;
 
     parking.exit = new Date();
 
@@ -102,7 +101,7 @@ router.put('/:id/pay', async (req, res) => {
 router.get('/:plate', async (req, res) => {
   try {
     const { plate } = req.params;
-    console.log(plate)
+
     if (!plate) {
       return res.status(400).json({ message: 'Placa é obrigatória' });
     }

@@ -10,7 +10,6 @@ const formattedHistory = (parkings) => {
   return parkings.map(parking => {
     const entryTime = moment(parking.entrance);
     const exitTime = parking.exit ? moment(new Date(parking.exit)) : moment(new Date());
-    console.log(exitTime, 'exit time')
 
     const minutesDiff = exitTime.diff(entryTime)
     const hours = Math.floor(moment.duration(minutesDiff).asHours());
