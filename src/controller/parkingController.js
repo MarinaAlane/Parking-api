@@ -24,7 +24,7 @@ const formattedHistory = (parkings) => {
     }
 
     return {
-      id: parking.id,
+      id: parking.ParkingId,
       time: timeResults(),
       paid: parking.paid,
       left: parking.left
@@ -32,4 +32,9 @@ const formattedHistory = (parkings) => {
   });
 }
 
-module.exports = { generateReservationCode, formattedHistory };
+let ParkingId = 1;
+const createdParkingId = () => {
+  return ParkingId++;
+}
+
+module.exports = { generateReservationCode, formattedHistory, createdParkingId };

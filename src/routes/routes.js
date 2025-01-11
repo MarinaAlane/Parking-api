@@ -1,9 +1,7 @@
 const router = require('express').Router();
-const mongoose = require('mongoose');
-const moment = require('moment');
 
 const Parking = require('../model/parkingModel');
-const { generateReservationCode, formattedHistory } = require('../controller/parkingController');
+const { generateReservationCode, formattedHistory, createdParkingId } = require('../controller/parkingController');
 
 router.post('/', async (req, res) => {
   try {
@@ -24,6 +22,7 @@ router.post('/', async (req, res) => {
       exit: null,
       paid: false,
       Reservation_code: reservationCode,
+      ParkingId: createdParkingId()
     });
 
     await parking.save();
@@ -36,15 +35,11 @@ router.post('/', async (req, res) => {
 });
 
 
-router.put('/:id/out', async (req, res) => {
+router.put('/:parkingId/out', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { parkingId } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: 'ID inválido' });
-    }
-
-    const parking = await Parking.findById(id);
+    const parking = await Parking.findOne({ ParkingId: parkingId });
 
     if (!parking) {
       return res.status(404).json({ message: 'Registro não encontrado' });
@@ -69,15 +64,11 @@ router.put('/:id/out', async (req, res) => {
   }
 });
 
-router.put('/:id/pay', async (req, res) => {
+router.put('/:parkingId/pay', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { parkingId } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      return res.status(400).json({ message: 'ID inválido' });
-    }
-
-    const parking = await Parking.findById(id);
+    const parking = await Parking.findOne({ ParkingId: parkingId });
 
     if (!parking) {
       return res.status(404).json({ message: 'Registro não encontrado' });
@@ -124,7 +115,5 @@ router.get('/:plate', async (req, res) => {
     res.status(500).json({ message: 'Erro ao buscar registro' });
   }
 });
-
-
 
 module.exports = router;
